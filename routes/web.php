@@ -50,7 +50,7 @@ Route::group(['prefix' =>'user/', 'middleware' => ['auth', 'is_user']], function
 
 /*------------------------------------------
 --------------------------------------------
-All Admin Routes List
+All Agent Routes List
 --------------------------------------------
 --------------------------------------------*/
 Route::group(['prefix' =>'manager/', 'middleware' => ['auth', 'is_manager']], function(){

@@ -58,12 +58,8 @@ class LoginController extends Controller
                 if (is_numeric($request->get('email'))) {
                     if(auth()->attempt(array('phone' => $input['email'], 'password' => $input['password'])))
                     {
-                        if (auth()->user()->is_type == '1') {
-                            return redirect()->route('admin.dashboard');
-                        }else if (auth()->user()->is_type == '2') {
+                        if (auth()->user()->is_type == '2') {
                             return redirect()->route('manager.dashboard');
-                        }else if (auth()->user()->is_type == '0') {
-                            return redirect()->route('user.home');
                         }else{
                             return redirect()->route('home');
                         }
@@ -74,12 +70,8 @@ class LoginController extends Controller
                 } else {
                     if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
                     {
-                        if (auth()->user()->is_type == '1') {
-                            return redirect()->route('admin.dashboard');
-                        }else if (auth()->user()->is_type == '2') {
+                        if (auth()->user()->is_type == '2') {
                             return redirect()->route('manager.dashboard');
-                        }else if (auth()->user()->is_type == '0') {
-                            return redirect()->route('user.home');
                         }else{
                             return redirect()->route('home');
                         }
