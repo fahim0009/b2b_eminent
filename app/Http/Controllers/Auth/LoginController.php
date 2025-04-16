@@ -52,11 +52,6 @@ class LoginController extends Controller
 
         $chksts = User::where('email','=', $request->email)->first();
 
-        dd($chksts);
-
-        if (is_numeric($request->get('email'))) {
-            $chksts = User::where('phone','=', $request->email)->first();
-        }
 
         if ($chksts) {
             if ($chksts->status == 1) {
