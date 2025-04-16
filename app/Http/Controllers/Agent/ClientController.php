@@ -118,6 +118,16 @@ class ClientController extends Controller
     } 
 
 
+    public function newClient()
+    {
+        $data = Client::where('status','0')->where('user_id', Auth::user()->id)->orderby('id','ASC')->get();
+        $count = $data->count();
+        $countries = CodeMaster::where('type','COUNTRY')->orderby('id','DESC')->get();
+        $accounts = Account::orderby('id','DESC')->get();
+        // $bpartners = BusinessPartner::orderby('id','DESC')->get();
+        return view('manager.client.new', compact('data','countries','accounts','count'));
+    }
+
 
     public function processing()
     {
@@ -142,7 +152,7 @@ class ClientController extends Controller
         $data = Client::where('user_id', Auth::user()->id)->where('status','2')->orderby('id','DESC')->get();
         $agents = User::where('is_type','2')->get();
         $accounts = Account::orderby('id','DESC')->get();
-        return view('manager.client.index', compact('data','accounts'));
+        return view('manager.client.completed', compact('data','accounts'));
     }
 
 

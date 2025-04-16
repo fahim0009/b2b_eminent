@@ -11,28 +11,54 @@
 
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">All Data</h3>
+              <h3 class="card-title">New Client</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                   <th>Sl</th>
-                  <th>Agent Name</th>
+                  {{-- <th>Client ID</th> --}}
                   <th>Passport Name</th>
                   <th>Passport Number</th>
+                  <th>Assign</th>
+                  <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
+
+                  @php
+                      $count1 = $count;                     
+                  @endphp
+
                   @foreach ($data as $key => $data)
                   <tr>
-                    <td style="text-align: center">{{ $key + 1 }}</td>
-                    <td style="text-align: center"><a href="{{route('admin.agentClient', $data->user->id)}}">{{$data->user->name}} {{$data->user->surname}}</a></td>
-                    <td style="text-align: center"> <a href="{{route('admin.clientDetails', $data->id)}}">{{$data->passport_name}}</a></td>
+                    <td style="text-align: center">{{ ($count1) }} </td>
+                    <td style="text-align: center"><a href="{{route('admin.clientDetails', $data->id)}}">{{$data->passport_name}}</a></td>
                     <td style="text-align: center">{{$data->passport_number}}</td>
+                    <td style="text-align: center">
+                      @if ($data->assign == 1)
+                          Assigned
+                      @else
+                          Not Assigned
+                      @endif
+                    </td>
+                    
+                    <td style="text-align: center">
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-secondary"><span id="stsval{{$data->id}}"> @if ($data->status == 0) New
+                          @elseif($data->status == 1) Processing @elseif($data->status == 2) Complete @else Decline @endif</span>
+                        </button>
+                          
+                      </div>
+                    </td>
+                    
                   </tr>
+                  
+                  @php
+                      $count1 = $count1 - 1;
+                  @endphp
                   @endforeach
                 
                 </tbody>
@@ -70,8 +96,6 @@
       });
     });
 
-
-
   </script>
 
 <script>
@@ -80,8 +104,6 @@
       //header for csrf-token is must in laravel
       $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
       //
-      
-     
       
   });
 </script>

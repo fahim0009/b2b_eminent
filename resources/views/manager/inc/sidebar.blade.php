@@ -23,6 +23,15 @@
       </li>
 
       <li class="nav-item">
+        <a href="{{route('manager.newClient')}}" class="nav-link {{ (request()->is('manager/new-clients*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            New Client
+          </p>
+        </a>
+      </li>
+
+      <li class="nav-item">
         <a href="{{route('manager.processingclient')}}" class="nav-link {{ (request()->is('manager/processing-clients*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>

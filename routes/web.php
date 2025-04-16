@@ -62,6 +62,7 @@ Route::group(['prefix' =>'manager/', 'middleware' => ['auth', 'is_manager']], fu
     Route::get('/add-new-client', [ClientController::class, 'addClient'])->name('manager.addclient');
     Route::get('/client', [ClientController::class, 'getClient'])->name('manager.client');
     Route::post('/client', [ClientController::class, 'store']);
+    Route::get('/new-clients', [ClientController::class, 'newClient'])->name('manager.newClient');
     Route::get('/processing-clients', [ClientController::class, 'processing'])->name('manager.processingclient');
     Route::get('/decline-clients', [ClientController::class, 'decline'])->name('manager.declineclient');
     Route::get('/completed-clients', [ClientController::class, 'completed'])->name('manager.completedclient');
