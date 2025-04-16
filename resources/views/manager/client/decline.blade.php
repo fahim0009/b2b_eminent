@@ -18,6 +18,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
+              
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -25,10 +26,6 @@
                   <th>Agent Name</th>
                   <th>Passport Name</th>
                   <th>Passport Number</th>
-                  <th>Package Cost</th>
-                  <th>Received Amount</th>
-                  <th>Decline</th>
-                  <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -36,26 +33,8 @@
                   <tr>
                     <td style="text-align: center">{{ $key + 1 }}</td>
                     <td style="text-align: center">{{$data->user->name}}</td>
-                    <td style="text-align: center">{{$data->passport_name}}</td>
+                    <td style="text-align: center"><a href="{{route('admin.clientDetails', $data->id)}}">{{$data->passport_name}}</a></td>
                     <td style="text-align: center">{{$data->passport_number}}</td>
-                    <td style="text-align: center">{{$data->package_cost}}</td>
-                    <td style="text-align: center">{{$data->total_rcv}}</td>
-                    <td style="text-align: center">
-                      <div class="btn-group">
-                        <button type="button" class="btn btn-secondary"><span id="stsval{{$data->id}}"> @if ($data->status == 0) Processing
-                        @elseif($data->status == 1) Complete @else Decline @endif</span></button>
-                        <button type="button" class="btn btn-secondary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
-                          <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu" role="menu">
-                          <button class="dropdown-item stsBtn" data-id="{{$data->id}}" value="0">Processing</button>
-                        </div>
-                      </div>
-                    </td>
-                    
-                    <td style="text-align: center">
-                      <a href="{{route('admin.clientDetails', $data->id)}}"><i class="fa fa-eye" style="color: #21f34f;font-size:16px;"></i></a>
-                    </td>
                   </tr>
                   @endforeach
                 

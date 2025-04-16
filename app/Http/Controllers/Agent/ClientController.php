@@ -131,15 +131,15 @@ class ClientController extends Controller
 
     public function decline()
     {
-        $data = Client::where('user_id', Auth::user()->id)->where('status','2')->orderby('id','DESC')->get();
+        $data = Client::where('user_id', Auth::user()->id)->where('status','3')->orderby('id','DESC')->get();
         $agents = User::where('is_type','2')->get();
         $accounts = Account::orderby('id','DESC')->get();
-        return view('manager.client.index', compact('data','accounts'));
+        return view('manager.client.decline', compact('data','accounts'));
     }
 
     public function completed()
     {
-        $data = Client::where('user_id', Auth::user()->id)->where('status','1')->orderby('id','DESC')->get();
+        $data = Client::where('user_id', Auth::user()->id)->where('status','2')->orderby('id','DESC')->get();
         $agents = User::where('is_type','2')->get();
         $accounts = Account::orderby('id','DESC')->get();
         return view('manager.client.index', compact('data','accounts'));
