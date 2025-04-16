@@ -59,9 +59,20 @@ Route::group(['prefix' =>'manager/', 'middleware' => ['auth', 'is_manager']], fu
 
 
     // client
-    Route::get('/client', [ClientController::class, 'index'])->name('manager.client');
+    Route::get('/add-new-client', [ClientController::class, 'addClient'])->name('manager.addclient');
+    Route::get('/client', [ClientController::class, 'getClient'])->name('manager.client');
+    Route::post('/client', [ClientController::class, 'store']);
     Route::get('/processing-clients', [ClientController::class, 'processing'])->name('manager.processingclient');
     Route::get('/decline-clients', [ClientController::class, 'decline'])->name('manager.declineclient');
     Route::get('/completed-clients', [ClientController::class, 'completed'])->name('manager.completedclient');
+
+    
+    Route::get('/client-details/{id}', [ClientController::class, 'getClientInfo'])->name('admin.clientDetails');
+
+    // download
+    Route::get('/client-image-download/{id}', [ClientController::class, 'client_image_download'])->name('client_image.download');
+    Route::get('/visa-image-download/{id}', [ClientController::class, 'visa_image_download'])->name('visa_image.download');
+    Route::get('/manpower-image-download/{id}', [ClientController::class, 'manpower_image_download'])->name('manpower_image.download');
+    Route::get('/passport-image-download/{id}', [ClientController::class, 'passport_image_download'])->name('passport_image.download');
 });
  

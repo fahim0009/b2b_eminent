@@ -8,16 +8,16 @@
         <a href="{{route('manager.dashboard')}}" class="nav-link {{ (request()->is('manager/dashboard*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
-            Add Client
+            Dashboard
           </p>
         </a>
       </li>
 
       <li class="nav-item">
-        <a href="{{route('manager.dashboard')}}" class="nav-link {{ (request()->is('manager/dashboard*')) ? 'active' : '' }}">
+        <a href="{{route('manager.addclient')}}" class="nav-link {{ (request()->is('manager/add-new-client*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
-            New Client
+            Create Client
           </p>
         </a>
       </li>
@@ -45,6 +45,16 @@
           <i class="nav-icon fas fa-th"></i>
           <p>
             Decline Client
+          </p>
+        </a>
+      </li>
+
+      
+      <li class="nav-item">
+        <a href="{{route('manager.client')}}" class="nav-link {{ (request()->is('manager/client*')) ? 'active' : '' }}">
+          <i class="nav-icon fas fa-th"></i>
+          <p>
+            All Client
           </p>
         </a>
       </li>
