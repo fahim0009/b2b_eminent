@@ -51,7 +51,7 @@ class LoginController extends Controller
         ]);
 
         $chksts = User::where('email', $input['email'])->orWhere('phone', $request->email)->first();
-        dd($chksts);
+        dd($request->email);
         if ($chksts) {
             if ($chksts->status == 1) {
 
