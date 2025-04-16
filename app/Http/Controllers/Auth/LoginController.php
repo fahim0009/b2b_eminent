@@ -45,12 +45,13 @@ class LoginController extends Controller
     {   
         $input = $request->all();
      
+        dd($input);
         $this->validate($request, [
             'email' => 'required',
             'password' => 'required',
         ]);
 
-        $chksts = User::where('email', '=', 'wasim@gmail.com')->first();
+        $chksts = User::where('email', '=', $request->email)->first();
 
 
         
