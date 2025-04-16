@@ -50,7 +50,7 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        $chksts = User::where('id','=', 1)->first();
+        $chksts = User::where('email','=', $request->email)->first();
 
         dd($chksts);
 
