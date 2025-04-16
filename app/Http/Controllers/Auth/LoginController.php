@@ -50,10 +50,14 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        $chksts = User::where('email','=', $request->email)->first();
+        $chksts = User::where('email', '=', $request->email)->first();
+
+        if (is_null($chksts)) {
+            return view('auth.login')
+                ->with('message', 'Credential Error. You are not an authenticated user.');
+        }
 
 
-        dd($chksts);
         if ($chksts) {
             if ($chksts->status == 1) {
 
