@@ -50,8 +50,8 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        $chksts = User::where('email', $input['email'])->orWhere('phone', $request->email)->first();
-        dd(User::all());
+        $chksts = User::where('email', $request->email)->orWhere('phone', $request->email)->first();
+
         if ($chksts) {
             if ($chksts->status == 1) {
 
