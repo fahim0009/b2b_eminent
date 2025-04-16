@@ -117,12 +117,16 @@ class ClientController extends Controller
         return view('manager.client.allclient', compact('datas','agents','countries','accounts','processing','decline','completed','id','completedPackageAmount','processingPackageAmount','totalPackageAmount','ttlVisanSrvcRcv','rcvamntForProcessing','totaServiceamt','totalPkgDiscountAmnt','dueForvisa','clientTransactions'));
     } 
 
+
+
     public function processing()
     {
-        $data = Client::where('user_id', Auth::user()->id)->where('status','0')->orderby('id','DESC')->get();
-        $agents = User::where('is_type','2')->get();
+        $data = Client::where('status','1')->where('user_id', Auth::user()->id)->orderby('id','ASC')->get();
+        $count = $data->count();
+        $countries = CodeMaster::where('type','COUNTRY')->orderby('id','DESC')->get();
         $accounts = Account::orderby('id','DESC')->get();
-        return view('manager.client.index', compact('data','accounts'));
+        // $bpartners = BusinessPartner::orderby('id','DESC')->get();
+        return view('manager.client.processing', compact('data','countries','accounts','count'));
     }
 
     public function decline()
