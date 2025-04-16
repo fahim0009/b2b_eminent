@@ -279,7 +279,7 @@ class ClientController extends Controller
     }
 
 
-    public function okalaMofaRequest(Request $request)
+    public function createMofaRequest(Request $request)
     {
         
         $client = Client::where('id', $request->client_id)->first();
@@ -296,6 +296,29 @@ class ClientController extends Controller
 
         $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Data store Successfully.</b></div>";
         return response()->json(['status'=> 300,'message'=>$message]);
+    }
+
+    public function getMofaRequest(Request $request)
+    {
+        $data = MofaHistory::where('client_id',$request->client_id)->where('user_id', Auth::user()->id)->orderby('id', 'ASC')->get();
+        
+        $prop = '';
+        
+            foreach ($data as $data){
+                
+                // <!-- Single Property Start -->
+                $prop.= '<tr>
+                            <td>
+                                '.$data->date.'
+                            </td>
+                            <td>
+                                '.$data->note.'
+                            </td>';
+                            
+                        $prop.= '</tr>';
+            }
+
+        return response()->json(['status'=> 300,'data'=>$prop]);
     }
 
 

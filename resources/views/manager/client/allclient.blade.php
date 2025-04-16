@@ -112,14 +112,12 @@
                         @elseif($data->status == 2) Complete @else Decline @endif
                       </td>    
                       <td style="text-align: center">
-                        {{-- <button type="button" class="btn btn-secondary btn-xs mofa-btn" data-toggle="modal" data-target="#noteModal" data-id="{{ $data->id }}">
-                          Mofa Request
-                        </button> --}}
-
-                        
                         <span class="btn btn-secondary btn-xs mofa-btn" style="cursor: pointer;" data-id="{{ $data->id }}" data-agent-id="{{ Auth::user()->id }}" data-rl-id="">Mofa Request</span>
 
                         
+                        <span class="btn btn-success btn-xs view-btn" style="cursor: pointer;" data-id="{{ $data->id }}" data-agent-id="{{ Auth::user()->id }}">All Request</span>
+
+
                       </td>                
                     </tr>
                     @endforeach 
@@ -337,6 +335,38 @@
   </div>
 </div>
 
+<div class="modal fade" id="tranModal" tabindex="-1" role="dialog" aria-labelledby="tranModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="tranModalLabel">All mofa request</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+
+
+          <div class="modal-body">
+            
+            <table id="trantable" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Note</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                
+            </table>
+
+          </div>
+        
+          
+      </div>
+  </div>
+</div>
 
 
 
@@ -435,10 +465,37 @@
           });
       });
 
-        $('#rcvModal').on('hidden.bs.modal', function () {
-            $('#note').val('');
-        });
+      $('#rcvModal').on('hidden.bs.modal', function () {
+          $('#note').val('');
+      });
       // receive end 
+
+
+      $("#allClientContainer").on('click', '.view-btn', function () {
+          var id = $(this).data('id');
+          var agentId = $(this).data('agent-id');
+          $('#tranModal').modal('show');
+          
+              var form_data = new FormData();
+              form_data.append("client_id", id);
+              form_data.append("agentId", agentId);
+
+              $.ajax({
+                  url: '{{ URL::to('/manager/get-mofa-request') }}',
+                  method: 'POST',
+                  data:form_data,
+                  contentType: false,
+                  processData: false,
+                  // dataType: 'json',
+                  success: function (response) {
+                    console.log(response);
+                      $('#trantable tbody').html(response.data);
+                  },
+                  error: function (xhr) {
+                      console.log(xhr.responseText);
+                  }
+              });
+      });
       
 
       function clearform(){

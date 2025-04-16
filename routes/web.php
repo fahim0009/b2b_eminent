@@ -77,7 +77,8 @@ Route::group(['prefix' =>'manager/', 'middleware' => ['auth', 'is_manager']], fu
     Route::get('/passport-image-download/{id}', [ClientController::class, 'passport_image_download'])->name('passport_image.download');
 
 
-    Route::post('/client-mofa-request', [ClientController::class,'okalaMofaRequest']);
+    Route::post('/client-mofa-request', [ClientController::class,'createMofaRequest']);
+    Route::post('/get-mofa-request', [ClientController::class,'getMofaRequest']);
 
 
 
