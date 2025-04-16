@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Client;
 use App\Models\Transaction;
 use App\Models\CodeMaster;
+use App\Models\MofaHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -275,6 +276,26 @@ class ClientController extends Controller
             return Response::download($filepath);
         }
         
+    }
+
+
+    public function okalaMofaRequest(Request $request)
+    {
+        
+        $client = Client::where('id', $request->client_id)->first();
+        $client->mofa = 1;
+        $client->mofa_request = $client->mofa_request + 1;
+        $client->save();
+
+        $data = new MofaHistory();
+        $data->client_id = $client->id;
+        $data->user_id = $request->agentId;
+        $data->date = date('Y-m-d');
+        $data->note = $request->note;
+        $data->save();
+
+        $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Data store Successfully.</b></div>";
+        return response()->json(['status'=> 300,'message'=>$message]);
     }
 
 

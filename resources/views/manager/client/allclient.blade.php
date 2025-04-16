@@ -81,7 +81,7 @@
               </li> -->
             </ul>
           </div>
-          <div class="card-body">
+          <div class="card-body" id="allClientContainer">
             <div class="tab-content" id="custom-tabs-one-tabContent">
               <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
                 
@@ -95,6 +95,7 @@
                     <th>Package Cost</th>
                     <th>Received Amount</th>
                     <th>Status</th>
+                    <th>Mofa Request</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -109,7 +110,17 @@
                         @if ($data->status == 0) New
                         @elseif($data->status == 1)Processing
                         @elseif($data->status == 2) Complete @else Decline @endif
-                      </td>                    
+                      </td>    
+                      <td style="text-align: center">
+                        {{-- <button type="button" class="btn btn-secondary btn-xs mofa-btn" data-toggle="modal" data-target="#noteModal" data-id="{{ $data->id }}">
+                          Mofa Request
+                        </button> --}}
+
+                        
+                        <span class="btn btn-secondary btn-xs mofa-btn" style="cursor: pointer;" data-id="{{ $data->id }}" data-agent-id="{{ Auth::user()->id }}" data-rl-id="">Mofa Request</span>
+
+                        
+                      </td>                
                     </tr>
                     @endforeach 
                   
@@ -120,7 +131,7 @@
               </div>
               <div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
 
-              <!-- visa and others transaction start  -->
+                <!-- visa and others transaction start  -->
 
                 <form method="GET" action="{{ route('admin.agentClient', $id) }}">
                   <div class="row">
@@ -280,7 +291,7 @@
                 <!-- End visa and others transaction End  -->
               </div>
 
-<!-- 
+              <!-- 
               <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
                 coming soon
               </div> -->
@@ -297,6 +308,34 @@
 </section>
 <!-- /.content -->
 
+
+<div class="modal fade" id="rcvModal" tabindex="-1" role="dialog" aria-labelledby="rcvModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="rcvModalLabel">Mofa Request</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <form id="rcvForm">
+              <div class="modal-body">
+                  <div class="permsg"></div>
+                
+                  <div class="form-group">
+                      <label for="note">Note</label>
+                      <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                  </div>
+
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn btn-warning">Request Send</button>
+              </div>
+          </form>
+      </div>
+  </div>
+</div>
 
 
 
@@ -320,53 +359,7 @@
       });
     });
 
-    $(function() {
-      $('.stsBtn').click(function() {
-        var url = "{{URL::to('/admin/change-client-status')}}";
-          var id = $(this).data('id');
-          var status = $(this).attr('value');
-          $.ajax({
-              type: "GET",
-              dataType: "json",
-              url: url,
-              data: {'status': status, 'id': id},
-              success: function(d){
-                if (d.status == 303) {
-                        $(function() {
-                          var Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000
-                          });
-                          Toast.fire({
-                            icon: 'warning',
-                            title: d.message
-                          });
-                        });
-                    }else if(d.status == 300){
-                      
-                      $("#stsval"+d.id).html(d.stsval);
-                      $(function() {
-                          var Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000
-                          });
-                          Toast.fire({
-                            icon: 'success',
-                            title: d.message
-                          });
-                        });
-                    }
-                },
-                error: function (d) {
-                    console.log(d);
-                }
-          });
-      })
-    })
+
 
   </script>
 
@@ -387,48 +380,35 @@
       //header for csrf-token is must in laravel
       $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
       //
-      var url = "{{URL::to('/admin/client')}}";
-      var upurl = "{{URL::to('/admin/client-update')}}";
-      // console.log(url);
-      $("#addBtn").click(function(){
-      //   alert("#addBtn");
-            $(this).prop('disabled', true);
-          if($(this).val() == 'Create') {
 
-              var passport_image = $('#passport_image').prop('files')[0];
-              if(typeof passport_image === 'undefined'){
-                  passport_image = 'null';
-              }
-              var client_image = $('#client_image').prop('files')[0];
-              if(typeof client_image === 'undefined'){
-                client_image = 'null';
-              }
+      // receive 
+      $("#allClientContainer").on('click', '.mofa-btn', function () {
+          var client_id = $(this).data('id');
+          var agentId = $(this).data('agent-id');
+
+          
+          $('#rcvModal').modal('show');
+          $('#rcvForm').off('submit').on('submit', function (event) {
+              event.preventDefault();
 
               var form_data = new FormData();
-              form_data.append('passport_image', passport_image);
-              form_data.append('client_image', client_image);
-              form_data.append("clientid", $("#clientid").val());
-              form_data.append("passport_number", $("#passport_number").val());
-              form_data.append("passport_name", $("#passport_name").val());
-              form_data.append("passport_rcv_date", $("#passport_rcv_date").val());
-              form_data.append("country", $("#country").val());
-              form_data.append("user_id", $("#user_id").val());
-              form_data.append("package_cost", $("#package_cost").val());
-              form_data.append("description", $("#description").val());
+              form_data.append("client_id", client_id);
+              form_data.append("agentId", agentId);
+              form_data.append("note", $("#note").val());
 
 
 
               $.ajax({
-                url: url,
-                method: "POST",
-                contentType: false,
-                processData: false,
-                data:form_data,
-                success: function (d) {
-                    if (d.status == 303) {
-                        $(".ermsg").html(d.message);
-                        $("#addBtn").prop('disabled', false);
-                    }else if(d.status == 300){
+                  url: '{{ URL::to('/manager/client-mofa-request') }}',
+                  method: 'POST',
+                  data:form_data,
+                  contentType: false,
+                  processData: false,
+                  // dataType: 'json',
+                  success: function (response) {
+                    if (response.status == 303) {
+                        $(".permsg").html(d.message);
+                    }else if(response.status == 300){
 
                       $(function() {
                           var Toast = Swal.mixin({
@@ -444,110 +424,23 @@
                         });
                       window.setTimeout(function(){location.reload()},2000)
                     }
-                },
-                error: function (d) {
-                    console.log(d);
-                }
-            });
-          }
-          //create  end
-          //Update
-          if($(this).val() == 'Update'){
-              var passport_image = $('#passport_image').prop('files')[0];
-              if(typeof passport_image === 'undefined'){
-                  passport_image = 'null';
-              }
-              var client_image = $('#client_image').prop('files')[0];
-              if(typeof client_image === 'undefined'){
-                client_image = 'null';
-              }
-              
-              var form_data = new FormData();
-              form_data.append('passport_image', passport_image);
-              form_data.append('client_image', client_image);
-              form_data.append("clientid", $("#clientid").val());
-              form_data.append("passport_number", $("#passport_number").val());
-              form_data.append("passport_name", $("#passport_name").val());
-              form_data.append("passport_rcv_date", $("#passport_rcv_date").val());
-              form_data.append("country", $("#country").val());
-              form_data.append("user_id", $("#user_id").val());
-              form_data.append("package_cost", $("#package_cost").val());
-              form_data.append("description", $("#description").val());
-              form_data.append("codeid", $("#codeid").val());
-              
-              $.ajax({
-                  url:upurl,
-                  type: "POST",
-                  dataType: 'json',
-                  contentType: false,
-                  processData: false,
-                  data:form_data,
-                  success: function(d){
-                      console.log(d);
-                      if (d.status == 303) {
-                          $(".ermsg").html(d.message);
-                          $("#addBtn").prop('disabled', false);
-                          pagetop();
-                      }else if(d.status == 300){
-                        $(function() {
-                          var Toast = Swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000
-                          });
-                          Toast.fire({
-                            icon: 'success',
-                            title: 'Data updated successfully.'
-                          });
-                        });
-                          window.setTimeout(function(){location.reload()},2000)
-                      }
+                    
+                      $('#rcvModal').modal('hide');
+
                   },
-                  error:function(d){
-                      console.log(d);
+                  error: function (xhr) {
+                      console.log(xhr.responseText);
                   }
               });
-          }
-          //Update
+          });
       });
-      //Edit
-      // $("#contentContainer").on('click','#EditBtn', function(){
-      //     //alert("btn work");
-      //     codeid = $(this).attr('rid');
-      //     //console.log($codeid);
-      //     info_url = url + '/'+codeid+'/edit';
-      //     //console.log($info_url);
-      //     $.get(info_url,{},function(d){
-      //         populateForm(d);
-      //         pagetop();
-      //     });
-      // });
-      //Edit  end
-      //Delete
-      $("#contentContainer").on('click','#deleteBtn', function(){
-            if(!confirm('Sure?')) return;
-            codeid = $(this).attr('rid');
-            info_url = url + '/'+codeid;
-            $.ajax({
-                url:info_url,
-                method: "GET",
-                type: "DELETE",
-                data:{
-                },
-                success: function(d){
-                    if(d.success) {
-                        alert(d.message);
-                        location.reload();
-                    }
-                },
-                error:function(d){
-                    console.log(d);
-                }
-            });
+
+        $('#rcvModal').on('hidden.bs.modal', function () {
+            $('#note').val('');
         });
-        //Delete 
-        
+      // receive end 
+      
+
       function clearform(){
           $('#createThisForm')[0].reset();
           $("#addBtn").val('Create');
