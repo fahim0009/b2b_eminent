@@ -69,10 +69,10 @@
       </li>
 
       <li class="nav-item">
-        <a href="{{route('manager.dashboard')}}" class="nav-link {{ (request()->is('manager/dashboard*')) ? 'active' : '' }}">
+        <a href="{{route('agent.profile')}}" class="nav-link {{ (request()->is('manager/profile*')) ? 'active' : '' }}">
           <i class="nav-icon fas fa-th"></i>
           <p>
-            Due Amount
+            Settings
           </p>
         </a>
       </li>

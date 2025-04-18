@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\Agent\ClientController;
+use App\Http\Controllers\Agent\AgentController;
   
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,12 @@ Route::group(['prefix' =>'manager/', 'middleware' => ['auth', 'is_manager']], fu
   
     Route::get('/dashboard', [HomeController::class, 'managerHome'])->name('manager.dashboard');
 
+    //profile
+    Route::get('/profile', [AgentController::class, 'profile'])->name('agent.profile');
+    Route::put('profile/{id}', [AgentController::class, 'profileUpdate']);
+    Route::post('changepassword', [AgentController::class, 'changePassword']);
+    Route::put('image/{id}', [AgentController::class, 'imageUpload']);
+    //profile end
 
     // client
     Route::get('/add-new-client', [ClientController::class, 'addClient'])->name('manager.addclient');
