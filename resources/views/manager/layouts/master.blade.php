@@ -91,7 +91,7 @@
         <div class="image">
 
             @if (Auth::user()->photo)
-                <img src="{{asset('images/'.$profile_data->photo)}}" class="img-circle elevation-2" alt="User Image">
+                <img src="{{asset('images/'.Auth::user()->photo)}}" class="img-circle elevation-2" alt="User Image">
             @else
               <img src="{{ asset('assets/admin/dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
             @endif
