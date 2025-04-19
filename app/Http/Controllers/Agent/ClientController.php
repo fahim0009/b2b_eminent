@@ -38,11 +38,12 @@ class ClientController extends Controller
                     'clients.package_cost',   
                     'clients.status',   
                     'clients.mofa',   
+                    'clients.mofa_request',   
                     DB::raw('COALESCE(SUM(CASE WHEN transactions.tran_type IN ("package_received", "package_discount") THEN transactions.bdt_amount ELSE 0 END), 0) as total_received'),
                     DB::raw('COALESCE(SUM(CASE WHEN transactions.tran_type IN ("package_sales", "package_adon") THEN transactions.bdt_amount ELSE 0 END), 0) as total_package')
                 )
                 ->where('clients.user_id', '=', $id)
-                ->groupBy('clients.id', 'clients.passport_name', 'clients.passport_number', 'clients.package_cost', 'clients.status', 'clients.mofa') // Group by all selected columns
+                ->groupBy('clients.id', 'clients.passport_name', 'clients.passport_number', 'clients.package_cost', 'clients.status', 'clients.mofa', 'clients.mofa_request') // Group by all selected columns
                 ->orderby('id','DESC')
                 ->get();
 
@@ -299,7 +300,6 @@ class ClientController extends Controller
         
         $client = Client::where('id', $request->client_id)->first();
         $client->mofa_request = 1;
-        $client->mofa = $client->mofa + 1;
         $client->save();
 
         $data = new MofaHistory();

@@ -114,7 +114,12 @@
                       </td>  
                       <td style="text-align: center">{{$data->mofa}}</td>  
                       <td style="text-align: center">
-                        <span class="btn btn-secondary btn-xs mofa-btn" style="cursor: pointer;" data-id="{{ $data->id }}" data-agent-id="{{ Auth::user()->id }}" data-rl-id="">Mofa Request</span>
+                        @if ($data->mofa_request == 1)
+                            Request Send
+                        @else
+                          <span class="btn btn-secondary btn-xs mofa-btn" style="cursor: pointer;" data-id="{{ $data->id }}" data-agent-id="{{ Auth::user()->id }}" data-rl-id="">Mofa Request</span>
+                        @endif
+
                         <span class="btn btn-success btn-xs view-btn" style="cursor: pointer;" data-id="{{ $data->id }}" data-agent-id="{{ Auth::user()->id }}">All Request</span>
                       </td>                
                     </tr>
