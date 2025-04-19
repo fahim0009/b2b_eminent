@@ -95,6 +95,7 @@
                     <th>Package Cost</th>
                     <th>Received Amount</th>
                     <th>Status</th>
+                    <th>Mofa</th>
                     <th>Mofa Request</th>
                   </tr>
                   </thead>
@@ -110,14 +111,11 @@
                         @if ($data->status == 0) New
                         @elseif($data->status == 1)Processing
                         @elseif($data->status == 2) Complete @else Decline @endif
-                      </td>    
+                      </td>  
+                      <td style="text-align: center">{{$data->mofa}}</td>  
                       <td style="text-align: center">
                         <span class="btn btn-secondary btn-xs mofa-btn" style="cursor: pointer;" data-id="{{ $data->id }}" data-agent-id="{{ Auth::user()->id }}" data-rl-id="">Mofa Request</span>
-
-                        
                         <span class="btn btn-success btn-xs view-btn" style="cursor: pointer;" data-id="{{ $data->id }}" data-agent-id="{{ Auth::user()->id }}">All Request</span>
-
-
                       </td>                
                     </tr>
                     @endforeach 

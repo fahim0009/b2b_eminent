@@ -37,11 +37,12 @@ class ClientController extends Controller
                     'clients.passport_number',
                     'clients.package_cost',   
                     'clients.status',   
+                    'clients.mofa',   
                     DB::raw('COALESCE(SUM(CASE WHEN transactions.tran_type IN ("package_received", "package_discount") THEN transactions.bdt_amount ELSE 0 END), 0) as total_received'),
                     DB::raw('COALESCE(SUM(CASE WHEN transactions.tran_type IN ("package_sales", "package_adon") THEN transactions.bdt_amount ELSE 0 END), 0) as total_package')
                 )
                 ->where('clients.user_id', '=', $id)
-                ->groupBy('clients.id', 'clients.passport_name', 'clients.passport_number', 'clients.package_cost', 'clients.status') // Group by all selected columns
+                ->groupBy('clients.id', 'clients.passport_name', 'clients.passport_number', 'clients.package_cost', 'clients.status', 'clients.mofa') // Group by all selected columns
                 ->orderby('id','DESC')
                 ->get();
 
@@ -178,6 +179,14 @@ class ClientController extends Controller
             exit();
         }
 
+        $chkpNumber = Client::where('passport_number',$request->passport_number)->whereNotNull('passport_number')->first();
+
+        if($chkpNumber){
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>This Person $chkpNumber->passport_name  ($chkpNumber->passport_number) already added. Check passport number again</b></div>";
+            return response()->json(['status'=> 303,'message'=>$message]);
+            exit();
+        }
+
         if(empty($request->passport_image) || !$request->hasFile('passport_image')){
             $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please upload a valid \"Passport Image\" file..!</b></div>";
             return response()->json(['status'=> 303,'message'=>$message]);
@@ -191,13 +200,7 @@ class ClientController extends Controller
         
 
         
-        $chkpNumber = Client::where('passport_number',$request->passport_number)->whereNotNull('passport_number')->first();
-
-        if($chkpNumber){
-            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>This Person $chkpNumber->passport_name  ($chkpNumber->passport_number) already added. Check passport number again</b></div>";
-            return response()->json(['status'=> 303,'message'=>$message]);
-            exit();
-        }
+        
 
 
         $data = new Client;
@@ -295,8 +298,8 @@ class ClientController extends Controller
     {
         
         $client = Client::where('id', $request->client_id)->first();
-        $client->mofa = 1;
-        $client->mofa_request = $client->mofa_request + 1;
+        $client->mofa_request = 1;
+        $client->mofa = $client->mofa + 1;
         $client->save();
 
         $data = new MofaHistory();
