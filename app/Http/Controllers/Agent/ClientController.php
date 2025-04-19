@@ -164,6 +164,12 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
+
+        if(empty($request->passport_name)){
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Passport Name \" field..!</b></div>";
+            return response()->json(['status'=> 303,'message'=>$message]);
+            exit();
+        }
         
 
         if(empty($request->passport_number)){
@@ -172,17 +178,23 @@ class ClientController extends Controller
             exit();
         }
 
-        if(empty($request->passport_name)){
-            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill \"Passport Name \" field..!</b></div>";
+        if(empty($request->passport_image) || !$request->hasFile('passport_image')){
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please upload a valid \"Passport Image\" file..!</b></div>";
             return response()->json(['status'=> 303,'message'=>$message]);
             exit();
         }
+
+        $request->validate([
+            'passport_image' => 'mimes:jpeg,png,jpg,gif,svg,pdf|max:8048',
+        ]);
+
+        
 
         
         $chkpNumber = Client::where('passport_number',$request->passport_number)->whereNotNull('passport_number')->first();
 
         if($chkpNumber){
-            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>This Person $chkpNumber->passport_name  ($chkpNumber->passport_number) already added.</b></div>";
+            $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>This Person $chkpNumber->passport_name  ($chkpNumber->passport_number) already added. Check passport number again</b></div>";
             return response()->json(['status'=> 303,'message'=>$message]);
             exit();
         }
