@@ -298,19 +298,21 @@ class ClientController extends Controller
     public function createMofaRequest(Request $request)
     {
         
-        $client = Client::where('id', $request->client_id)->first();
-        $client->mofa_request = 1;
-        $client->save();
-
         $data = new MofaHistory();
-        $data->client_id = $client->id;
+        $data->client_id = $request->client_id;
         $data->user_id = $request->agentId;
         $data->date = date('Y-m-d');
         $data->note = $request->note;
-        $data->save();
+        if ($data->save()) {
+            $client = Client::where('id', $request->client_id)->first();
+            $client->mofa_request = 1;
+            $client->save();
+            $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Data store Successfully.</b></div>";
+            return response()->json(['status'=> 300,'message'=>$message]);
+        }else{
+            return response()->json(['status'=> 303,'message'=>'Server Error!!']);
+        }
 
-        $message ="<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Data store Successfully.</b></div>";
-        return response()->json(['status'=> 300,'message'=>$message]);
     }
 
     public function getMofaRequest(Request $request)
