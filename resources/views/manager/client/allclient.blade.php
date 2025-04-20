@@ -85,6 +85,7 @@
             <div class="tab-content" id="custom-tabs-one-tabContent">
               <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
                 
+                <div class="errormessage"></div>
 
                 <table id="example1" class="table table-bordered table-striped mt-4">
                   <thead>
@@ -440,7 +441,19 @@
                   // dataType: 'json',
                   success: function (response) {
                     if (response.status == 303) {
-                        $(".permsg").html(d.message);
+                      $(function() {
+                          var Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                          });
+                          Toast.fire({
+                            icon: 'error',
+                            title: 'Deactive client.'
+                          });
+                        });
+                        $(".errormessage").html(response.message);
                     }else if(response.status == 300){
 
                       $(function() {
